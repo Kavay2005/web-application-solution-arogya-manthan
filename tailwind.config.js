@@ -9,32 +9,32 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Custom healthcare color scheme for rural population
+        // Custom healthcare color scheme for rural population - Updated with Almond, Dark Brown, Olive Green
         primary: {
-          50: '#F0F9FF',
-          100: '#E0F2FE',
-          600: '#2563EB',  // Primary Blue - Trust, healthcare
-          700: '#1D4ED8',
-          800: '#1E40AF',
+          50: '#EDD5B0',
+          100: '#EFDECD',
+          600: '#6B8E23',  // Olive Green - Primary
+          700: '#556B2F',  // Dark Olive
+          800: '#3C4D1F',
         },
         health: {
-          600: '#16A34A',  // Health Green - Wellness, CTAs
-          700: '#15803D',
+          600: '#556B2F',  // Olive Green - Wellness, CTAs
+          700: '#3C4D1F',
         },
         emergency: {
-          600: '#DC2626',  // Red - High urgency
-          700: '#B91C1C',
+          600: '#654321',  // Dark Brown - High urgency
+          700: '#4A3119',
         },
         warning: {
-          500: '#F59E0B',  // Amber - Medium urgency
-          600: '#D97706',
+          500: '#808000',  // Olive Green - Medium urgency
+          600: '#6B8E23',
         },
         neutral: {
-          50: '#F9FAFB',
-          100: '#F3F4F6',  // Light background
-          200: '#E5E7EB',
-          800: '#1F2937',  // Body text
-          900: '#111827',  // Headings
+          50: '#EFDECD',
+          100: '#EDD5B0',  // Almond background
+          200: '#E8D4A8',
+          800: '#654321',  // Dark Brown text
+          900: '#3C2817',  // Dark Brown headings
         }
       }
     },

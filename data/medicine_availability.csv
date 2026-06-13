@@ -1,0 +1,31 @@
+medicine_name,category,description,price_range,availability_status,common_usage
+Paracetamol,Pain Relief,Effective for fever and mild to moderate pain,100-150,in_stock,Fever/Headache/Body Pain
+Ibuprofen,Pain Relief,NSAID for pain and inflammation relief,150-200,in_stock,Fever/Pain/Inflammation
+Aspirin,Antibiotic,Antiplatelet medication and pain relief,50-100,in_stock,Fever/Blood Thinning
+Cough Syrup,Respiratory,Effective cough suppressant,80-120,in_stock,Cough/Cold
+Vitamin C,Supplements,Immune system booster,40-80,in_stock,Immunity/Cold Prevention
+Antacid,Digestive,Acid reflux and heartburn relief,60-100,in_stock,Heartburn/Acidity
+Omeprazole,Digestive,Proton pump inhibitor for acid reflux,120-180,in_stock,GERD/Ulcers
+Loperamide,Digestive,Anti-diarrheal medication,70-110,in_stock,Diarrhea/Loose Motions
+Oral Rehydration Salts,Hydration,Electrolyte replacement therapy,30-50,in_stock,Dehydration/Diarrhea
+Cetirizine,Allergies,Antihistamine for allergies,80-120,in_stock,Allergies/Itching
+Loratadine,Allergies,Non-drowsy antihistamine,100-150,in_stock,Seasonal Allergies/Hives
+Salbutamol Inhaler,Respiratory,Bronchodilator for asthma,200-300,in_stock,Asthma/Wheezing
+Calcium Gluconate,Supplements,Calcium supplementation,60-100,in_stock,Bone Health/Pregnancy
+Iron Ferrous,Supplements,Iron supplement for anemia,50-90,in_stock,Anemia/Weakness
+Multivitamin,Supplements,Complete vitamin and mineral supplement,150-250,in_stock,General Health/Immunity
+Amoxicillin,Antibiotic,Beta-lactam antibiotic,200-300,in_stock,Bacterial Infections
+Metformin,Diabetes,First-line diabetes medication,100-180,in_stock,Type 2 Diabetes
+Amlodipine,Hypertension,Calcium channel blocker,120-200,in_stock,High Blood Pressure
+Lisinopril,Hypertension,ACE inhibitor for hypertension,150-220,in_stock,Hypertension/Heart Disease
+Atorvastatin,Cholesterol,Statin for cholesterol control,180-280,in_stock,High Cholesterol
+Insulin,Diabetes,Injectable insulin therapy,300-500,in_stock,Type 1/2 Diabetes
+Eye Drops,Ophthalmic,Lubricating and antibiotic eye drops,40-80,in_stock,Dry Eyes/Infections
+Throat Lozenges,Respiratory,Soothing throat lozenges,50-90,in_stock,Sore Throat/Cough
+Honey,Natural Remedy,Cough suppressant and throat soother,80-150,in_stock,Cough/Cold/Immunity
+Tramadol,Pain Relief,Opioid pain reliever,200-350,limited_stock,Moderate to Severe Pain
+Sertraline,Mental Health,SSRI antidepressant,180-280,in_stock,Depression/Anxiety
+Diazepam,Mental Health,Benzodiazepine for anxiety,150-250,limited_stock,Anxiety/Muscle Spasm
+Methotrexate,Immunosuppressant,Disease-modifying antirheumatic drug,400-600,in_stock,Rheumatoid Arthritis
+Enalapril,Hypertension,ACE inhibitor for blood pressure,120-180,in_stock,Hypertension
+Chloroquine,Antimalarial,Antimalarial and anti-inflammatory,100-200,in_stock,Malaria/Lupus

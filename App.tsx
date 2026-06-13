@@ -5,12 +5,10 @@ import FeatureCard from './components/FeatureCard';
 import LanguageSelector from './components/LanguageSelector';
 import Loader from './components/Loader';
 import { DiseaseModal } from './components/DiseaseModal';
-import { VoiceInput } from './components/VoiceInput';
 import { LoginPage } from './components/LoginPage';
 import MetricsPanel from './components/MetricsPanel';
 import EvaluationMetricsDisplay from './components/EvaluationMetricsDisplay';
-// import MedicineFinder from './components/MedicineFinder';
-import MedicineAvailability from './components/MedicineAvailability';
+import MedicineFinder from './components/MedicineFinder';
 // import EmergencySOS from './components/EmergencySOS';
 // import VideoConsult from './components/VideoConsult';
 // import HealthRecord from './components/HealthRecord';
@@ -27,10 +25,27 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
     const [selectedDisease, setSelectedDisease] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [analysisData, setAnalysisData] = useState<any>(null);
-    const [isListening, setIsListening] = useState(false);
-    const [showVoiceModal, setShowVoiceModal] = useState(false);
     const [evaluationMetrics, setEvaluationMetrics] = useState<any>(null);
     const [showMetrics, setShowMetrics] = useState(false);
+    const [mlComparison, setMlComparison] = useState<any>(null);
+
+    // Load ML comparison data on mount
+    React.useEffect(() => {
+        const loadMLComparison = async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/ml-comparison`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        setMlComparison(data.data);
+                    }
+                }
+            } catch (err) {
+                console.log('ML comparison data not available');
+            }
+        };
+        loadMLComparison();
+    }, []);
 
     // Initialize with greeting messages
     React.useEffect(() => {
@@ -142,7 +157,7 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
             case 'green':
                 return 'border-health-300 bg-health-50 dark:bg-health-900/30';
             default:
-                return 'border-neutral-300 bg-neutral-50 dark:bg-gray-900/30';
+                return 'border-neutral-300 bg-neutral-50 dark:bg-neutral-100/30';
         }
     };
 
@@ -157,7 +172,7 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
             case 'green':
                 return 'text-health-800 dark:text-health-200';
             default:
-                return 'text-neutral-800 dark:text-neutral-200';
+                return 'text-blue-900 dark:text-blue-900';
         }
     };
 
@@ -177,20 +192,20 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                 </div>
             )}
             
-            <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-500 text-blue-800 dark:text-blue-200 rounded">
+            <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-900 border-l-4 border-amber-500 text-amber-800 dark:text-amber-200 rounded">
                 <p className="font-semibold">{texts.disclaimer || 'Disclaimer'}</p>
-                <p className="text-sm">{texts.disclaimer || 'This tool provides diagnostic suggestions based on local AI analysis and is intended for informational purposes only.'}</p>
+                <p className="text-base">{texts.disclaimer || 'This tool provides diagnostic suggestions based on local AI analysis and is intended for informational purposes only.'}</p>
             </div>
 
-            <div className="flex-grow overflow-y-auto bg-neutral-50 dark:bg-gray-900 rounded-lg p-4 space-y-4 mb-4">
+            <div className="flex-grow overflow-y-auto bg-[#FF9500] rounded-lg p-4 space-y-4 mb-4">
                 {messages.length === 0 && !isLoading && (
                     <div className="flex flex-col items-center justify-center h-full text-center space-y-6 py-8">
-                        <div className="text-6xl">👋</div>
+                        <div className="text-7xl">👋</div>
                         <div>
-                            <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-2">
+                            <h2 className="text-6xl font-bold text-blue-900 mb-2">
                                 {language === 'HI' ? 'स्वागत है' : language === 'PA' ? 'ਸਵਾਗਤ ਹੈ' : 'Welcome'}
                             </h2>
-                            <p className="text-neutral-600 dark:text-gray-300 text-lg mb-4">
+                            <p className="text-3xl text-blue-800 mb-4">
                                 {language === 'HI'
                                     ? 'अपने लक्षण बताएं और हम आपकी मदद करेंगे'
                                     : language === 'PA'
@@ -199,17 +214,9 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                             </p>
                         </div>
 
-                        <div className="w-full max-w-xs">
-                            <VoiceInput
-                                onTranscript={handleVoiceTranscript}
-                                isListening={isListening}
-                                setIsListening={setIsListening}
-                                language={language}
-                                texts={texts}
-                            />
-                        </div>
 
-                        <p className="text-sm text-neutral-500 dark:text-gray-400 pt-4">
+
+                        <p className="text-lg text-[#654321] pt-4">
                             {language === 'HI'
                                 ? 'या नीचे टाइप करें'
                                 : language === 'PA'
@@ -230,14 +237,14 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                         )}
                         
                         {msg.sender === 'bot' && msg.text === 'greeting' && (
-                            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-neutral-200 dark:border-gray-700 mb-4 shadow-sm">
+                            <div className="bg-neutral-50 rounded-lg p-4 border border-neutral-300 mb-4 shadow-sm">
                                 <div className="flex gap-3 items-start">
-                                    <span className="text-3xl">👋</span>
+                                    <span className="text-4xl">👋</span>
                                     <div className="flex-1">
-                                        <h3 className="font-bold text-lg text-neutral-900 dark:text-white mb-1">
+                                        <h3 className="font-bold text-2xl text-[#654321] mb-1">
                                             {language === 'HI' ? 'नमस्ते!' : language === 'PA' ? 'ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ!' : 'Hello!'}
                                         </h3>
-                                        <p className="text-neutral-700 dark:text-gray-300">
+                                        <p className="text-xl text-[#654321]">
                                             {language === 'HI'
                                                 ? 'मैं आपकी स्वास्थ्य सहायक हूँ। आप मुझसे अपने लक्षणों के बारे में बता सकते हैं। कृपया याद रखें - मैं सुझाव देता हूँ, निदान नहीं। हमेशा अपने डॉक्टर से मिलें।'
                                                 : language === 'PA'
@@ -253,15 +260,15 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                             <div className="space-y-4 mb-4">
                                 {/* Symptoms Section */}
                                 {analysisData.symptoms_extracted && analysisData.symptoms_extracted.length > 0 && (
-                                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/40 rounded-lg p-4 border border-blue-200 dark:border-blue-700">
-                                        <h3 className="font-bold text-lg mb-3 text-blue-900 dark:text-blue-100">📋 Extracted Symptoms</h3>
+                                    <div className="bg-[#f7b48d] dark:bg-[#f7b48d] rounded-lg p-4 border border-[#e8a366] dark:border-[#e8a366]">
+                                        <h3 className="font-bold text-2xl mb-3 text-[#6B8E23] dark:text-[#6B8E23]">📋 Extracted Symptoms</h3>
                                         <div className="flex flex-wrap gap-2">
                                             {analysisData.symptoms_extracted.map((symptom: any, idx: number) => {
                                                 const name = typeof symptom === 'string' ? symptom : symptom.name || symptom;
                                                 return (
                                                     <span
                                                         key={idx}
-                                                        className="inline-block rounded-full bg-blue-500 text-white px-4 py-2 text-sm font-medium"
+                                                        className="inline-block rounded-full bg-white text-[#6B8E23] px-4 py-2 text-2xl font-bold border-2 border-[#6B8E23]"
                                                     >
                                                         {name}
                                                     </span>
@@ -273,9 +280,9 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
 
                                 {/* Overall Triage */}
                                 {analysisData.overall_triage && (
-                                    <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
-                                        <h3 className="font-bold text-lg mb-2 text-purple-900 dark:text-purple-100">⚡ Overall Triage Level</h3>
-                                        <p className="text-purple-800 dark:text-purple-200 font-semibold">
+                                    <div className="bg-orange-100 dark:bg-orange-900/40 rounded-lg p-4 border-4 border-[#654321] dark:border-[#654321]">
+                                        <h3 className="font-bold text-2xl mb-2 text-[#654321] dark:text-[#654321]">⚡ Overall Triage Level</h3>
+                                        <p className="text-[#654321] dark:text-[#654321] font-semibold text-xl">
                                             {typeof analysisData.overall_triage === 'object' 
                                                 ? analysisData.overall_triage.level 
                                                 : analysisData.overall_triage}
@@ -286,7 +293,7 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                                 {/* Diseases Section */}
                                 {analysisData.diagnoses && analysisData.diagnoses.length > 0 && (
                                     <div>
-                                        <h3 className="font-bold text-lg mb-3 text-gray-900 dark:text-white">🏥 Probable Diseases</h3>
+                                        <h3 className="font-bold text-2xl mb-3 text-[#6B8E23] dark:text-[#6B8E23]">🏥 Probable Diseases</h3>
                                         <div className="grid gap-3">
                                             {analysisData.diagnoses.map((diagnosis: any, idx: number) => {
                                                 const urgency = diagnosis.urgency || {};
@@ -294,14 +301,14 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                                                 return (
                                                     <div
                                                         key={idx}
-                                                        className={`rounded-lg p-4 border-2 cursor-pointer transition hover:shadow-lg ${getUrgencyColor(color)}`}
+                                                        className={`rounded-lg p-4 border-6 cursor-pointer transition hover:shadow-lg bg-white dark:bg-white ${getUrgencyColor(color)}`}
                                                         onClick={() => {
                                                             setSelectedDisease(diagnosis.name);
                                                             setIsModalOpen(true);
                                                         }}
                                                     >
                                                         <div className="flex items-start justify-between mb-2">
-                                                            <h4 className="font-bold text-lg text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
+                                                            <h4 className="font-bold text-2xl text-[#6B8E23] dark:text-[#6B8E23] hover:text-[#556B2F] dark:hover:text-[#556B2F]">
                                                                 {diagnosis.name}
                                                             </h4>
                                                             {urgency.level && (
@@ -311,12 +318,12 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                                                             )}
                                                         </div>
                                                         
-                                                        <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                                                        <p className="text-xl text-[#6B8E23] dark:text-[#6B8E23] mb-2">
                                                             {urgency.reasoning || 'Disease analysis'}
                                                         </p>
                                                         
                                                         {diagnosis.score && (
-                                                            <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                                                            <p className="text-xl font-semibold text-[#6B8E23] dark:text-[#6B8E23] mb-2">
                                                                 Match Score: {Math.round(diagnosis.score * 10) / 10}%
                                                             </p>
                                                         )}
@@ -328,20 +335,20 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                                                         )}
 
                                                         {diagnosis.precautions && diagnosis.precautions.length > 0 && (
-                                                            <div className="mt-3 pt-3 border-t border-opacity-30 border-gray-400">
-                                                                <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">Quick Precautions:</p>
-                                                                <ul className="text-xs space-y-1">
+                                                            <div className="mt-3 pt-3 border-t border-opacity-30 border-[#6B8E23]">
+                                                                <p className="text-lg font-semibold text-[#6B8E23] dark:text-[#6B8E23] mb-1">Quick Precautions:</p>
+                                                                <ul className="text-lg space-y-1">
                                                                     {diagnosis.precautions.slice(0, 2).map((prec: string, pidx: number) => (
-                                                                        <li key={pidx} className="text-gray-700 dark:text-gray-300">• {prec}</li>
+                                                                        <li key={pidx} className="text-[#6B8E23] dark:text-[#6B8E23]">• {prec}</li>
                                                                     ))}
                                                                     {diagnosis.precautions.length > 2 && (
-                                                                        <li className="text-gray-600 dark:text-gray-400 italic">+{diagnosis.precautions.length - 2} more</li>
+                                                                        <li className="text-[#6B8E23] dark:text-[#6B8E23] italic">+{diagnosis.precautions.length - 2} more</li>
                                                                     )}
                                                                 </ul>
                                                             </div>
                                                         )}
                                                         
-                                                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-3">Click to see full details</p>
+                                                        <p className="text-lg text-[#6B8E23] dark:text-[#6B8E23] mt-3">Click to see full details</p>
                                                     </div>
                                                 );
                                             })}
@@ -357,12 +364,47 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                                     </div>
                                 )}
 
+                                {/* ML Model Comparison */}
+                                {mlComparison && mlComparison.models && (
+                                    <div className="bg-gradient-to-r from-[#8B6F47] to-[#6B4423] dark:from-[#5C4033] dark:to-[#3D2817] rounded-lg p-4 border border-[#A0826D] dark:border-[#5C4033]">
+                                        <h3 className="font-bold text-4xl mb-4 text-white dark:text-white">🤖 ML Model Performance</h3>
+                                        
+                                        {/* Models Table */}
+                                        <div className="overflow-x-auto mb-4">
+                                            <table className="w-full text-xl">
+                                                <thead>
+                                                    <tr className="border-b border-[#A0826D] dark:border-[#5C4033]">
+                                                        <th className="text-left py-3 px-4 font-bold text-white dark:text-white">Model</th>
+                                                        <th className="text-center py-3 px-4 font-bold text-white dark:text-white">Accuracy</th>
+                                                        <th className="text-center py-3 px-4 font-bold text-white dark:text-white">Precision</th>
+                                                        <th className="text-center py-3 px-4 font-bold text-white dark:text-white">Recall</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {mlComparison.models.map((model: string, idx: number) => (
+                                                        <tr key={idx} className="border-b border-[#8B6F47] dark:border-[#5C4033] hover:bg-[#6B4423]/50 dark:hover:bg-[#3D2817]/50">
+                                                            <td className="py-3 px-4 font-bold text-white dark:text-white text-lg capitalize">{model.replace(/_/g, ' ')}</td>
+                                                            <td className="text-center py-3 px-4 text-white dark:text-white font-bold text-lg">{mlComparison.accuracy[idx]}%</td>
+                                                            <td className="text-center py-3 px-4 text-white dark:text-white text-lg">{mlComparison.precision[idx]}%</td>
+                                                            <td className="text-center py-3 px-4 text-white dark:text-white text-lg">{mlComparison.recall[idx]}%</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <p className="text-lg text-white dark:text-white italic font-semibold">
+                                            Best Model: <span className="font-bold">{mlComparison.models[0]}</span> with {mlComparison.accuracy[0]}% accuracy
+                                        </p>
+                                    </div>
+                                )}
+
                                 {/* Evaluation Metrics Button */}
                                 {evaluationMetrics && (
                                     <div className="mt-4 animate-fadeIn">
                                         <button
                                             onClick={() => setShowMetrics(!showMetrics)}
-                                            className="w-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 hover:from-cyan-500 hover:via-blue-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl backdrop-blur-xl border border-white/30 hover:border-white/50"
+                                            className="w-full bg-gradient-to-r from-[#8B6F47] to-[#6B4423] hover:from-[#9D7D54] hover:to-[#7D5433] text-white font-bold text-xl py-4 px-5 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl backdrop-blur-xl border border-white/30 hover:border-white/50"
                                         >
                                             {showMetrics ? '📊 Hide Evaluation Metrics' : '📊 View Evaluation Metrics'}
                                         </button>
@@ -382,8 +424,8 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                 
                 {isLoading && (
                     <div className="flex items-start gap-3">
-                        <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full flex-shrink-0">{ICONS.bot}</div>
-                        <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-3">
+                        <div className="p-2 bg-amber-100 rounded-full flex-shrink-0">{ICONS.bot}</div>
+                        <div className="bg-neutral-200 rounded-lg p-3">
                             <Loader />
                         </div>
                     </div>
@@ -403,15 +445,9 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                     }}
                     placeholder={texts.typeMessage || 'Type your symptoms here...'}
                     disabled={isLoading}
-                    className="flex-grow p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    className="flex-grow p-3 border rounded-full bg-amber-50 border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50"
                 />
-                <button
-                    onClick={() => setShowVoiceModal(true)}
-                    className="bg-primary-500 text-white p-3 rounded-full hover:bg-primary-600 hover:shadow-lg transition text-xl"
-                    title={language === 'HI' ? 'माइक्रोफोन' : language === 'PA' ? 'ਮਾਈਕ੍ਰੋਫੋਨ' : 'Microphone'}
-                >
-                    🎤
-                </button>
+
                 <button 
                     onClick={handleSend} 
                     disabled={isLoading || !input.trim()} 
@@ -421,62 +457,7 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                 </button>
             </div>
 
-            {/* Voice Input Modal */}
-            {showVoiceModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-md w-full">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                                {language === 'HI' ? '🎤 आवाज़ इनपुट' : language === 'PA' ? '🎤 ਅਵਾਜ਼ ਇਨਪੁਟ' : '🎤 Voice Input'}
-                            </h3>
-                            <button
-                                onClick={() => setShowVoiceModal(false)}
-                                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold"
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <VoiceInput
-                            onTranscript={(text, lang) => {
-                                setInput(text);
-                                setShowVoiceModal(false);
-                                // Auto-send voice input
-                                setTimeout(() => {
-                                    setMessages(prev => [...prev, { sender: 'user', text: text }]);
-                                    setIsLoading(true);
-                                    setError(null);
 
-                                    fetch(`${API_BASE_URL}/chat`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                            message: text,
-                                            language: lang
-                                        })
-                                    })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.success && data.result) {
-                                            setAnalysisData(data.result);
-                                            setMessages(prev => [...prev, { sender: 'bot', text: 'structured_result' }]);
-                                        }
-                                        setIsLoading(false);
-                                    })
-                                    .catch(err => {
-                                        console.error('Voice processing error:', err);
-                                        setIsLoading(false);
-                                        setError('Could not process voice input');
-                                    });
-                                }, 500);
-                            }}
-                            isListening={isListening}
-                            setIsListening={setIsListening}
-                            language={language}
-                            texts={texts}
-                        />
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
@@ -524,13 +505,13 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={texts.askLocation}
-                    className="flex-grow p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-grow p-3 border rounded-full bg-amber-50 border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
                 <button onClick={handleSearch} disabled={isLoading || !location} className="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 disabled:bg-blue-300">
                     {ICONS.map}
                 </button>
             </div>
-            <div className="flex-grow overflow-y-auto bg-white dark:bg-gray-800 rounded-lg p-4">
+            <div className="flex-grow overflow-y-auto bg-amber-50 rounded-lg p-4">
                 {isLoading && <Loader />}
                 {locationError && <p className="text-red-500">{locationError}</p>}
                 {!location && !locationError && <p className="text-gray-500">{texts.gettingLocation}</p>}
@@ -567,7 +548,7 @@ const ChatbotView: React.FC<{ texts: { [key: string]: string }, language: Langua
 
     return (
         <div className="p-4 flex flex-col h-full">
-            <div className="flex-grow overflow-y-auto bg-white dark:bg-gray-800 rounded-lg p-4 space-y-4">
+            <div className="flex-grow overflow-y-auto bg-amber-50 rounded-lg p-4 space-y-4">
                 <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
                     <input type="file" id="file-upload" className="hidden" accept="image/*" onChange={handleFileChange} />
                     <label htmlFor="file-upload" className="cursor-pointer text-blue-600 dark:text-blue-400 font-semibold">
@@ -727,10 +708,8 @@ const App: React.FC = () => {
     switch (currentView) {
       case AppView.CHATBOT:
         return <ChatbotView texts={texts} language={language} />;
-      case AppView.MEDICINE:
-        return <MedicineAvailability />;
-      // case AppView.FIND_CARE:
-      //   return <MedicineFinder />;
+      case AppView.FIND_CARE:
+        return <MedicineFinder texts={texts} />;
       // case AppView.ANALYZE_REPORT:
       //   return <HealthRecord />;
       // case AppView.EMERGENCY:
@@ -742,7 +721,7 @@ const App: React.FC = () => {
         return (
           <div className="p-4 md:p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {NAV_ITEMS.filter(item => item.view === AppView.CHATBOT || item.view === AppView.MEDICINE).map(item => (
+              {NAV_ITEMS.filter(item => item.view !== AppView.DASHBOARD).map(item => (
                 <FeatureCard
                   key={item.view}
                   icon={item.icon}
@@ -762,19 +741,79 @@ const App: React.FC = () => {
       {!isLoggedIn ? (
         <LoginPage onLogin={handleLogin} language={language} texts={texts} onLanguageChange={setLanguage} />
       ) : (
-        <div className="min-h-screen flex flex-col font-sans text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-gray-900">
+        <div className="min-h-screen flex flex-col font-sans text-blue-900 text-lg bg-amber-50">
           {/* Header */}
           <header className="sticky top-0 bg-white dark:bg-gray-800 border-b border-neutral-200 dark:border-gray-700 shadow-sm z-10">
             <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 {currentView !== AppView.DASHBOARD && (
                    <button onClick={() => setCurrentView(AppView.DASHBOARD)} className="p-2 rounded-full hover:bg-neutral-200 dark:hover:bg-gray-700">
                      {ICONS.home}
                    </button>
                 )}
+                <svg className="w-10 h-10" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                  {/* Blue Sky */}
+                  <circle cx="100" cy="80" r="80" fill="#2E5F8A"/>
+                  
+                  {/* Green Trees Left */}
+                  <ellipse cx="30" cy="90" rx="20" ry="25" fill="#3FA860"/>
+                  <ellipse cx="20" cy="100" rx="12" ry="18" fill="#2D8C4A"/>
+                  <ellipse cx="40" cy="105" rx="15" ry="20" fill="#3FA860"/>
+                  
+                  {/* White House */}
+                  <rect x="55" y="85" width="35" height="30" fill="white" stroke="#000" strokeWidth="1.5"/>
+                  
+                  {/* Red Roof */}
+                  <polygon points="55,85 90,85 72.5,70" fill="#DC143C" stroke="#000" strokeWidth="1.5"/>
+                  
+                  {/* Roof stripes */}
+                  <line x1="60" y1="78" x2="75" y2="78" stroke="#A00000" strokeWidth="1.5"/>
+                  <line x1="65" y1="74" x2="80" y2="74" stroke="#A00000" strokeWidth="1.5"/>
+                  <line x1="70" y1="70" x2="85" y2="70" stroke="#A00000" strokeWidth="1.5"/>
+                  
+                  {/* House window */}
+                  <rect x="62" y="92" width="8" height="8" fill="#87CEEB" stroke="#000" strokeWidth="0.8"/>
+                  <line x1="66" y1="92" x2="66" y2="100" stroke="#000" strokeWidth="0.5"/>
+                  <line x1="62" y1="96" x2="70" y2="96" stroke="#000" strokeWidth="0.5"/>
+                  
+                  {/* House door */}
+                  <rect x="75" y="100" width="8" height="15" fill="#8B4513" stroke="#000" strokeWidth="0.8"/>
+                  <circle cx="82" cy="107" r="1.5" fill="#FFD700"/>
+                  
+                  {/* Fence */}
+                  <line x1="45" y1="115" x2="95" y2="115" stroke="#000" strokeWidth="1"/>
+                  <line x1="50" y1="115" x2="50" y2="120" stroke="#000" strokeWidth="0.8"/>
+                  <line x1="60" y1="115" x2="60" y2="120" stroke="#000" strokeWidth="0.8"/>
+                  <line x1="70" y1="115" x2="70" y2="120" stroke="#000" strokeWidth="0.8"/>
+                  <line x1="80" y1="115" x2="80" y2="120" stroke="#000" strokeWidth="0.8"/>
+                  <line x1="90" y1="115" x2="90" y2="120" stroke="#000" strokeWidth="0.8"/>
+                  
+                  {/* White Clouds */}
+                  <ellipse cx="120" cy="40" rx="15" ry="10" fill="white"/>
+                  <ellipse cx="130" cy="38" rx="12" ry="9" fill="white"/>
+                  <ellipse cx="110" cy="38" rx="10" ry="8" fill="white"/>
+                  
+                  <ellipse cx="160" cy="55" rx="14" ry="9" fill="white"/>
+                  <ellipse cx="170" cy="53" rx="11" ry="8" fill="white"/>
+                  <ellipse cx="150" cy="54" rx="10" ry="7" fill="white"/>
+                  
+                  {/* Yellow Fields - curved lines */}
+                  <path d="M 30 120 Q 70 115 140 125" stroke="#FFD700" strokeWidth="6" fill="none"/>
+                  <path d="M 25 135 Q 80 128 150 140" stroke="#F0C000" strokeWidth="6" fill="none"/>
+                  <path d="M 35 150 Q 90 140 160 155" stroke="#FFD700" strokeWidth="5" fill="none"/>
+                  
+                  {/* Red Medical Cross */}
+                  <g transform="translate(155, 120)">
+                    <rect x="-18" y="-3" width="36" height="6" fill="#DC143C" stroke="#000" strokeWidth="1.5"/>
+                    <rect x="-3" y="-18" width="6" height="36" fill="#DC143C" stroke="#000" strokeWidth="1.5"/>
+                  </g>
+                  
+                  {/* Black border circle */}
+                  <circle cx="100" cy="80" r="80" fill="none" stroke="#000" strokeWidth="3"/>
+                </svg>
                 <div>
-                  <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">{texts.appName}</h1>
-                  <p className="text-xs text-neutral-500 dark:text-gray-400">{texts.tagline}</p>
+                  <h1 className="text-3xl font-bold text-white dark:text-white">{texts.appName}</h1>
+                  <p className="text-xl text-neutral-300 dark:text-gray-400">{texts.tagline}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -783,7 +822,7 @@ const App: React.FC = () => {
                   onClick={handleLogout}
                   className="px-4 py-2 text-sm font-semibold text-neutral-600 hover:text-emergency-600 dark:text-gray-400 dark:hover:text-emergency-400"
                 >
-                  {language === 'EN' ? 'Logout' : language === 'HI' ? 'लॉगआउट' : 'ਲਾਗਆਉਟ'}
+                  {language === 'EN' ? 'Logout' : language === 'HI' ? 'लॉगआउट' : 'Logout'}
                 </button>
               </div>
             </div>

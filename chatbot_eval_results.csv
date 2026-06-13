@@ -1,0 +1,51 @@
+prompt_id,query,expected,predicted,correct
+C1,I have itching,Fungal infection,Fungal infection,True
+C2,I have itching and skin_rash,Fungal infection,Fungal infection,True
+C3,What could cause itching and skin_rash?,Fungal infection,Fungal infection,True
+C4,I have vomiting,Peptic ulcer diseae,GERD,False
+C5,I have vomiting and loss_of_appetite,Peptic ulcer diseae,GERD,False
+C6,What could cause vomiting and loss_of_appetite?,Peptic ulcer diseae,GERD,False
+C7,I have itching,Jaundice,Fungal infection,False
+C8,I have itching and vomiting,Jaundice,Chronic cholestasis,False
+C9,What could cause itching and vomiting?,Jaundice,Chronic cholestasis,False
+C10,I have chills,Typhoid,Allergy,False
+C11,I have chills and vomiting,Typhoid,Malaria,False
+C12,What could cause chills and vomiting?,Typhoid,Malaria,False
+C13,I have fatigue,Bronchial Asthma,Diabetes,False
+C14,I have fatigue and cough,Bronchial Asthma,Bronchial Asthma,True
+C15,What could cause fatigue and cough?,Bronchial Asthma,Bronchial Asthma,True
+C16,I have acidity,Migraine,GERD,False
+C17,I have acidity and indigestion,Migraine,Migraine,True
+C18,What could cause acidity and indigestion?,Migraine,Migraine,True
+C19,I have chills,Tuberculosis,Allergy,False
+C20,I have chills and vomiting,Tuberculosis,Malaria,False
+C21,What could cause chills and vomiting?,Tuberculosis,Malaria,False
+C22,I have burning_micturition,Urinary tract infection,Unknown,False
+C23,I have burning_micturition and bladder_discomfort,Urinary tract infection,Unknown,False
+C24,What could cause burning_micturition and bladder_discomfort?,Urinary tract infection,Unknown,False
+C25,I have chills,Pneumonia,Allergy,False
+C26,I have chills and fatigue,Pneumonia,Dengue,False
+C27,What could cause chills and fatigue?,Pneumonia,Dengue,False
+C28,I have joint_pain,hepatitis A,Unknown,False
+C29,I have joint_pain and vomiting,hepatitis A,GERD,False
+C30,What could cause joint_pain and vomiting?,hepatitis A,GERD,False
+C31,I have skin_rash,Impetigo,Unknown,False
+C32,I have skin_rash and high_fever,Impetigo,Unknown,False
+C33,What could cause skin_rash and high_fever?,Impetigo,Unknown,False
+C34,I have itching,Chicken pox,Fungal infection,False
+C35,I have itching and skin_rash,Chicken pox,Fungal infection,False
+C36,What could cause itching and skin_rash?,Chicken pox,Fungal infection,False
+C37,I have constipation,Dimorphic hemmorhoids(piles),Typhoid,False
+C38,I have constipation and pain_during_bowel_movements,Dimorphic hemmorhoids(piles),Typhoid,False
+C39,What could cause constipation and pain_during_bowel_movements?,Dimorphic hemmorhoids(piles),Typhoid,False
+C40,I have muscle_weakness,Arthritis,Unknown,False
+C41,I have muscle_weakness and stiff_neck,Arthritis,Unknown,False
+C42,What could cause muscle_weakness and stiff_neck?,Arthritis,Unknown,False
+C43,I have itching,Chronic cholestasis,Fungal infection,False
+C44,I have itching and vomiting,Chronic cholestasis,Chronic cholestasis,True
+C45,What could cause itching and vomiting?,Chronic cholestasis,Chronic cholestasis,True
+C46,I have fatigue,Varicose veins,Diabetes,False
+C47,I have fatigue and cramps,Varicose veins,Varicose veins,True
+C48,What could cause fatigue and cramps?,Varicose veins,Varicose veins,True
+C49,I have muscle_wasting,AIDS,Unknown,False
+C50,I have muscle_wasting and patches_in_throat,AIDS,Unknown,False

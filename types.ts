@@ -12,7 +12,6 @@ export enum AppView {
   SYMPTOM_ANALYZER = 'SYMPTOM_ANALYZER',
   EMERGENCY = 'EMERGENCY',
   VIDEO_CONSULT = 'VIDEO_CONSULT',
-  MEDICINE = 'MEDICINE',
 }
 
 export interface ChatMessage {
@@ -20,7 +19,7 @@ export interface ChatMessage {
   text: string;
 }
 
-export interface GroundingChunk {
+  export interface GroundingChunk {
   maps?: {
     uri: string;
     title: string;
